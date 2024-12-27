@@ -1,0 +1,99 @@
+package br.com.projeto.clinica.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
+import br.com.projeto.clinica.model.Paciente;
+import br.com.projeto.clinica.service.PacienteService;
+import jakarta.validation.Valid;
+
+@Controller
+public class PacienteController {
+
+	
+	@Autowired
+	private PacienteService pacienteService;
+	
+	
+	@GetMapping("/novoPaciente")
+	public String novoPaciente(Model model) {
+		
+		model.addAttribute("paciente", new Paciente());
+		
+		return "/paciente/novoPaciente";
+	}
+	
+	
+	@PostMapping("/salvarPaciente")
+	public String salvarPaciente(@Valid Paciente paciente,Model model) {
+		
+		try {
+			
+			if (paciente.getCodPaciente() == null) {
+				pacienteService.inserir(paciente);
+			} else {
+				Paciente paciente2 = pacienteService.listarPorId(paciente.getCodPaciente());
+				paciente2.setNomePaciente(paciente.getNomePaciente());
+				paciente2.setFonePaciente(paciente.getFonePaciente());
+				paciente2.setEmailPaciente(paciente.getEmailPaciente());
+				paciente2.setDiagnostico(paciente.getDiagnostico());
+				paciente2.setDataRegistro(paciente.getDataRegistro());
+		
+				pacienteService.inserir(paciente2);
+				
+			}
+			
+			model.addAttribute("paciente", paciente);
+						
+			return "/paciente/novoPaciente";
+			
+		} catch (Exception e) {
+			
+			model.addAttribute("msg", "Erro ao inserir paciente!");
+			
+			return "redirect:/paciente/novoPaciente";
+		}
+		
+	}
+	
+	
+	@GetMapping("/removerPaciente")
+    public String removerPaciente(@RequestParam Integer codigo){
+        
+		Paciente paciente = pacienteService.listarPorId(codigo);
+		pacienteService.remover(paciente);
+		
+        return "redirect:/paciente/listarPacientes";
+    }
+	
+	
+	@GetMapping("/editarPaciente")
+    public ModelAndView editar(@RequestParam Integer codigo){
+        
+        ModelAndView mv = new ModelAndView("/paciente/editarPaciente");
+    
+        Paciente paciente = pacienteService.listarPorId(codigo);
+        mv.addObject("paciente",  paciente);
+  
+        return mv;
+   
+    }
+	
+	
+	
+	@GetMapping(value = "/listarPacientes")
+	public String listarPaciente(Paciente paciente,Model model) {
+		
+		model.addAttribute("paciente", paciente);
+		model.addAttribute("listarPacientes", pacienteService.listarPacientes());
+			
+		return "/paciente/listarPacientes";
+	}
+	
+	
+}

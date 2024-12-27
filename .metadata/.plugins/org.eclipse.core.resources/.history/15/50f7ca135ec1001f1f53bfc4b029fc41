@@ -1,0 +1,112 @@
+package br.com.projeto.clinica.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import br.com.projeto.clinica.model.Paciente;
+import br.com.projeto.clinica.service.PacienteService;
+import jakarta.validation.Valid;
+
+@Controller
+public class PacienteController {
+
+	
+	@Autowired
+	private PacienteService pacienteService;
+	
+	
+	@GetMapping("/novoPaciente")
+	public String novoPaciente(Model model) {
+		
+		model.addAttribute("paciente", new Paciente());
+		
+		return "/paciente/novoPaciente";
+	}
+	
+	
+	@PostMapping("/salvarPaciente")
+	public String salvarPaciente(@Valid Paciente paciente,Model model) {
+		
+		try {
+			
+			if (paciente.getCodPaciente() == null) {
+				pacienteService.inserir(paciente);
+			} else {
+				Paciente paciente2 = pacienteService.listarPorId(paciente.getCodPaciente());
+				usuario2.setNome(usuario.getNome());
+				usuario2.setSenha(usuario.getSenha());
+				usuario2.setEmail(usuario.getEmail());
+				usuario2.setFoneUsuario(usuario.getFoneUsuario());
+				
+				usuarioService.inserir(usuario2);
+				
+			}
+			
+			model.addAttribute("usuario", usuario);
+						
+			return "redirect:/home/novoUsuario";
+			
+		} catch (Exception e) {
+			
+			model.addAttribute("msg", "Erro ao inserir usuario!");
+			
+			return "redirect:/home/novoUsuario";
+		}
+		
+	}
+	
+	
+	@GetMapping("/removerUsuario")
+    public String removerUsuario(@RequestParam Integer codigo){
+        
+		Usuario usuario = usuarioService.listarPorId(codigo);
+		usuarioService.remover(usuario);
+		
+        return "redirect:/home/listarUsuarios";
+    }
+	
+	
+	@GetMapping("/editarUsuario")
+    public String editarUsuario(@RequestParam Integer codigo,Model model){
+      
+        Usuario usuario = usuarioService.listarPorId(codigo);
+        model.addAttribute("usuario",  usuario);
+               
+        return "redirect:/home/editarUsuarios";
+   
+    }
+	
+	
+	@GetMapping(value = "/listarUsuarios")
+	public String listarUsuario(Usuario usuario,Model model) {
+		
+		model.addAttribute("usuario", usuario);
+		model.addAttribute("listaUsuarios", usuarioService.listarUsuario());
+			
+		return "/home/listarUsuarios";
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+}

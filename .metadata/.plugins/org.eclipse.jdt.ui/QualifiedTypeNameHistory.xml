@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="jakarta.persistence.IdClass"/>
+    <fullyQualifiedTypeName name="java.time.LocalDate"/>
+    <fullyQualifiedTypeName name="java.time.LocalTime"/>
+    <fullyQualifiedTypeName name="br.com.projeto.clinica.repository.MedicoRepository"/>
+    <fullyQualifiedTypeName name="br.com.projeto.clinica.repository.PacienteRepository"/>
+    <fullyQualifiedTypeName name="br.com.projeto.clinica.repository.StatusRepository"/>
+    <fullyQualifiedTypeName name="jakarta.persistence.Column"/>
+    <fullyQualifiedTypeName name="jakarta.persistence.Id"/>
+    <fullyQualifiedTypeName name="jakarta.persistence.GeneratedValue"/>
+    <fullyQualifiedTypeName name="jakarta.persistence.ManyToOne"/>
+    <fullyQualifiedTypeName name="jakarta.persistence.JoinColumn"/>
+    <fullyQualifiedTypeName name="org.springframework.stereotype.Repository"/>
+    <fullyQualifiedTypeName name="org.springframework.data.jpa.repository.JpaRepository"/>
+    <fullyQualifiedTypeName name="java.lang.Integer"/>
+    <fullyQualifiedTypeName name="br.com.projeto.clinica.repository.UsuarioRepository"/>
+    <fullyQualifiedTypeName name="org.springframework.stereotype.Service"/>
+    <fullyQualifiedTypeName name="br.com.projeto.clinica.repository.ConsultaRepository"/>
+    <fullyQualifiedTypeName name="br.com.projeto.clinica.repository.ConsultorioRepository"/>
+    <fullyQualifiedTypeName name="br.com.projeto.clinica.service.UsuarioService"/>
+    <fullyQualifiedTypeName name="br.com.projeto.clinica.model.Status"/>
+    <fullyQualifiedTypeName name="jakarta.persistence.Entity"/>
+    <fullyQualifiedTypeName name="org.springframework.stereotype.Controller"/>
+    <fullyQualifiedTypeName name="org.springframework.beans.factory.annotation.Autowired"/>
+    <fullyQualifiedTypeName name="br.com.projeto.clinica.model.Paciente"/>
+    <fullyQualifiedTypeName name="br.com.projeto.clinica.model.Medico"/>
+    <fullyQualifiedTypeName name="br.com.projeto.clinica.model.Consultorio"/>
+    <fullyQualifiedTypeName name="br.com.projeto.clinica.service.ConsultaService"/>
+    <fullyQualifiedTypeName name="br.com.projeto.clinica.service.MedicoService"/>
+    <fullyQualifiedTypeName name="br.com.projeto.clinica.service.PacienteService"/>
+    <fullyQualifiedTypeName name="br.com.projeto.clinica.service.StatusService"/>
+    <fullyQualifiedTypeName name="br.com.projeto.clinica.service.ConsultorioService"/>
+    <fullyQualifiedTypeName name="br.com.projeto.clinica.model.Usuario"/>
+    <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.GetMapping"/>
+    <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.PostMapping"/>
+    <fullyQualifiedTypeName name="jakarta.validation.constraints.AssertFalse.List"/>
+    <fullyQualifiedTypeName name="br.com.projeto.clinica.model.Consulta"/>
+    <fullyQualifiedTypeName name="org.springframework.web.servlet.ModelAndView"/>
+</qualifiedTypeNameHistroy>

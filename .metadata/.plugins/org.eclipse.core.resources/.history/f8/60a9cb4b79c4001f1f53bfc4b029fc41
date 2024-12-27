@@ -1,0 +1,78 @@
+package br.com.projeto.clinica.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import br.com.projeto.clinica.model.Consulta;
+import br.com.projeto.clinica.repository.ConsultaRepository;
+
+@Service
+public class ConsultaService {
+
+	
+	@Autowired
+	private ConsultaRepository consultaRepository;
+	
+	
+	public Consulta inserir(Consulta consulta) {
+		
+		return consultaRepository.save(consulta);
+	}
+	
+	
+	public void remover(Consulta consulta) {
+		
+		consultaRepository.delete(consulta);
+	}
+	
+	
+	
+	public void remover(Integer codigo) {
+		
+		consultaRepository.deleteById(codigo);
+	}
+	
+	
+	public List<Consulta> listarConsultas(){
+
+		return consultaRepository.findAll();
+		
+	}
+	
+	public Consulta listarPorId(Integer codigo) {
+		
+		return consultaRepository.findById(codigo).get();
+	}
+	
+	
+	public Consulta editar(Integer codigo) {
+		
+		  Optional<Consulta> u = consultaRepository.findById(codigo);
+			
+		  Consulta consulta = null;
+		  
+		  if (u.isPresent()) {
+			  
+			  consulta = u.get();
+			  
+		  }else {
+			  
+			  throw new RuntimeException(" Consulta não existe :: " + codigo);
+		  }
+		  
+		  return consulta;
+		}
+	
+	
+	public Consulta buscarConsulta(String nome) {
+		
+		return consultaRepository.buscarConsulta(nome);
+	}
+	
+	
+	
+	
+}

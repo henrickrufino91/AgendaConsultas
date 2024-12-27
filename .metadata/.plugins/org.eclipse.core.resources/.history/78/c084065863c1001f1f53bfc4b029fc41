@@ -1,0 +1,98 @@
+package br.com.projeto.clinica.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
+import br.com.projeto.clinica.model.Consulta;
+import br.com.projeto.clinica.model.Consultorio;
+
+import br.com.projeto.clinica.service.ConsultorioService;
+
+import jakarta.validation.Valid;
+
+@Controller
+public class ConsultorioController {
+
+	
+	@Autowired
+	private ConsultorioService consultorioService;
+	
+	
+	@GetMapping("/novoConsultorio")
+	public String novoConsultorio(Model model) {
+		
+		model.addAttribute("consultorio", new Consultorio());
+		
+		return "/consultorio/novoConsultorio";
+	}
+	
+	
+	@PostMapping("/salvarConsultorio")
+	public String salvarConsultorio(@Valid Consultorio consultorio,Model model) {
+		
+		try {
+			
+			if (consultorio.getCodConsultorio() == null) {
+				consultorioService.inserir(consultorio);
+			} else {
+				Consultorio consultorio2 = consultorioService.listarPorId(consultorio.getCodConsultorio());
+				consultorio2.setNomeConsultorio(consultorio.getNomeConsultorio());
+				
+				consultorioService.inserir(consultorio2);
+				
+			}
+			
+			model.addAttribute("consultorio", consultorio);
+						
+			return "redirect:/consultorio/novoConsultorio";
+			
+		} catch (Exception e) {
+			
+			model.addAttribute("msg", "Erro ao inserir consultorio!");
+			
+			return "redirect:/consultorio/novoConsultorio";
+		}
+		
+	}
+	
+	
+	@GetMapping("/removerConsultorio")
+    public String removerConsultorio(@RequestParam Integer codigo){
+        
+		Consultorio consultorio = consultorioService.listarPorId(codigo);
+		consultorioService.remover(consultorio);
+		
+        return "redirect:/consultorio/listarConsultorio";
+    }
+	
+	
+	@GetMapping("/editarConsultorio")
+    public ModelAndView editar(@RequestParam Integer codigo){
+        
+        ModelAndView mv = new ModelAndView("/consultorio/editarConsultorio");
+    
+        Consultorio consultorio = consultorioService.listarPorId(codigo);
+        mv.addObject("consultorio",  consultorio);
+              
+        return mv;
+   
+    }
+	
+	
+	
+	@GetMapping(value = "/listarConsultorio")
+	public String listarConsultorio(Consultorio consultorio,Model model) {
+		
+		model.addAttribute("consultorio", consultorio);
+		model.addAttribute("listaConsultorio", consultorioService.listarConsultorio());
+			
+		return "/consultorio/listarConsultorio";
+	}
+	
+	
+}

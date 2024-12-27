@@ -1,0 +1,165 @@
+package br.com.projeto.clinica.controller;
+
+import java.security.NoSuchAlgorithmException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
+import br.com.projeto.clinica.exception.ServiceEXC;
+import br.com.projeto.clinica.model.Usuario;
+import br.com.projeto.clinica.service.UsuarioService;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+
+@Controller
+public class UsuarioController {
+
+	
+	@Autowired
+	private UsuarioService usuarioService;
+	
+	
+	@GetMapping("/")
+	public String login(Model model) {
+		
+		model.addAttribute("usuario", new Usuario());
+		
+		return "/home/login";
+	}
+	
+	@GetMapping("/index")
+	public String index(Model model) {
+		
+		model.addAttribute("usuario", new Usuario());
+		
+		return "/home/index";
+	}
+	
+	
+	
+	
+	
+	
+	
+	@GetMapping("/novoUsuario")
+	public String novoUsuario(Model model) {
+		
+		model.addAttribute("usuario", new Usuario());
+		
+		return "/home/novoUsuario";
+	}
+	
+	
+	@PostMapping("/salvarUsuario")
+	public String salvarUsuario(@Valid Usuario usuario,Model model) {
+		
+		try {
+			
+			if (usuario.getCodUsuario() == null) {
+				usuarioService.inserir(usuario);
+			} else {
+				Usuario usuario2 = usuarioService.listarPorId(usuario.getCodUsuario());
+				usuario2.setNome(usuario.getNome());
+				usuario2.setSenha(usuario.getSenha());
+				usuario2.setEmail(usuario.getEmail());
+				usuario2.setFoneUsuario(usuario.getFoneUsuario());
+				
+				usuarioService.inserir(usuario2);
+				
+			}
+			
+			model.addAttribute("usuario", usuario);
+						
+			return "redirect:/novoUsuario";
+			
+		} catch (Exception e) {
+			
+			model.addAttribute("msg", "Erro ao inserir usuario!");
+			
+			return "redirect:/novoUsuario";
+		}
+		
+	}
+	
+	
+	@GetMapping("/removerUsuario")
+    public String removerUsuario(@RequestParam Integer codigo){
+        
+		Usuario usuario = usuarioService.listarPorId(codigo);
+		usuarioService.remover(usuario);
+		
+        return "redirect:/listarUsuarios";
+    }
+	
+	
+	@GetMapping("/editarUsuario")
+    public ModelAndView editar(@RequestParam Integer codigo){
+        
+        ModelAndView mv = new ModelAndView("/home/editarUsuario");
+    
+        Usuario usuario = usuarioService.listarPorId(codigo);
+        mv.addObject("usuario",  usuario);
+              
+        return mv;
+   
+    }
+	
+	
+	
+	@GetMapping(value = "/listarUsuarios")
+	public String listarUsuario(Usuario usuario,Model model) {
+		
+		model.addAttribute("usuario", usuario);
+		model.addAttribute("listarUsuarios", usuarioService.listarUsuario());
+			
+		return "/home/listarUsuarios";
+	}
+	
+	
+	@PostMapping("/logar")
+	 public String login(@Valid Usuario usuario,Model model,
+	                              HttpSession session) throws NoSuchAlgorithmException, ServiceEXC {
+	      
+		 		 
+	        Usuario userLogin = usuarioService.login(usuario.getEmail(), usuario.getSenha());
+	       
+	       
+	        if(userLogin != null) {
+	        	
+	        	session.setAttribute("usuarioLogado", userLogin);
+	        	  
+	        	return "/home/index";
+	        	
+	        } else {
+	        		      
+	        	
+	        	
+	        	model.addAttribute("msg", "Login ou senha está incorreto");
+	       
+	            return "/home/login";
+	        }
+
+	    }
+	
+	
+	@GetMapping("/logout")
+	public ModelAndView logout(HttpSession session) {
+		
+		ModelAndView mv = new ModelAndView("/home/login");
+		
+		mv.addObject("usuario", new Usuario());
+		
+		session.invalidate();
+    
+    return mv;
+	}
+	
+	
+	
+	
+}

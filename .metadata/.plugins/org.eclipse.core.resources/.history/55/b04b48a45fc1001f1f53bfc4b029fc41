@@ -1,0 +1,97 @@
+package br.com.projeto.clinica.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import br.com.projeto.clinica.model.Medico;
+import br.com.projeto.clinica.model.Paciente;
+import br.com.projeto.clinica.service.MedicoService;
+import br.com.projeto.clinica.service.PacienteService;
+import jakarta.validation.Valid;
+
+@Controller
+public class MedicoController {
+
+	
+	@Autowired
+	private MedicoService medicoService;
+	
+	
+	@GetMapping("/novoMedico")
+	public String novoMedico(Model model) {
+		
+		model.addAttribute("medico", new Medico());
+		
+		return "/medico/novoMedico";
+	}
+	
+	
+	@PostMapping("/salvarMedico")
+	public String salvarMedico(@Valid Medico medico,Model model) {
+		
+		try {
+			
+			if (medico.getCodMedico() == null) {
+				medicoService.inserir(medico);
+			} else {
+				Medico medico2 = medicoService.listarPorId(medico.getCodMedico());
+				medico2.setNomeMedico(medico.getNomeMedico());
+				medico2.setFoneMedico(medico.getFoneMedico());
+				medico2.setEspecialidade(medico.getEspecialidade());
+				medico2.setEmailMedico(medico.getEmailMedico());
+				medico2.setCrm(medico.getCrm());
+				
+				medicoService.inserir(medico2);
+				
+			}
+			
+			model.addAttribute("medico", medico);
+						
+			return "redirect:/medico/novoMedico";
+			
+		} catch (Exception e) {
+			
+			model.addAttribute("msg", "Erro ao inserir medico!");
+			
+			return "redirect:/medico/novoMedico";
+		}
+		
+	}
+	
+	
+	@GetMapping("/removerMedico")
+    public String removerMedico(@RequestParam Integer codigo){
+        
+		Medico medico = medicoService.listarPorId(codigo);
+		medicoService.remover(medico);
+		
+        return "redirect:/medico/listarMedicos";
+    }
+	
+	
+	@GetMapping("/editarMedico")
+    public String editarMedico(@RequestParam Integer codigo,Model model){
+      
+        Medico medico = medicoService.listarPorId(codigo);
+        model.addAttribute("medico",  medico);
+               
+        return "redirect:/medico/editarMedico";
+   
+    }
+	
+	
+	@GetMapping(value = "/listarMedicos")
+	public String listarMedico(Medico medico,Model model) {
+		
+		model.addAttribute("medico", medico);
+		model.addAttribute("listarMedicos", medicoService.listarMedicos());
+			
+		return "/medico/listarMedicos";
+	}
+	
+	
+}
